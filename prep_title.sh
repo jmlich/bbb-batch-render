@@ -10,6 +10,9 @@ infile2="template_2.svg"
 
 found=0
 
+mkdir -p output
+mkdir -p output2
+
 while IFS=";" read cut_start cut_end video_in filename start end day speakers topic; do
 #    echo "cut_start=$cut_start cut_end=$cut_end video_in=$video_in filename=$filename start=$start end=$end day=$day speakers=$speakers topic=$topic"
 
