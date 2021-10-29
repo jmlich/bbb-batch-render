@@ -12,11 +12,12 @@ found=0
 
 mkdir -p output
 mkdir -p output2
+mkdir -p output3
 
 while IFS=";" read cut_start cut_end video_in filename start end day speakers topic; do
 #    echo "cut_start=$cut_start cut_end=$cut_end video_in=$video_in filename=$filename start=$start end=$end day=$day speakers=$speakers topic=$topic"
 
-#    echo $filename
+    echo $filename
 #    echo $speakers
 #    echo $topic
     topic=${topic//\//\\\/}
@@ -30,8 +31,8 @@ while IFS=";" read cut_start cut_end video_in filename start end day speakers to
 
     tmp=$(mktemp /tmp/titulky.XXXXXX)
     tmp2=$(mktemp /tmp/titulky.XXXXXX)
-    cat "$infile" | sed "s/%START%/$start/g" | sed "s/%END%/$end/g" |sed "s/%DAY%/$day/g"   | sed "s/%SPEAKERS%/$speakers/g"  | sed "s/%TOPIC%/$topic/g" > "$tmp"
-    cat "$infile2" | sed "s/%START%/$start/g" | sed "s/%END%/$end/g" |sed "s/%DAY%/$day/g"   | sed "s/%SPEAKERS%/$speakers/g"  | sed "s/%TOPIC%/$topic/g" > "$tmp2"
+    cat "$infile" | sed -e "s/%START%/$start/g" -e "s/%END%/$end/g" -e "s/%DAY%/$day/g" -e "s/%SPEAKERS%/$speakers/g" -e "s/%TOPIC%/$topic/g" > "$tmp"
+    cat "$infile2" | sed -e "s/%START%/$start/g" -e "s/%END%/$end/g" -e "s/%DAY%/$day/g" -e "s/%SPEAKERS%/$speakers/g" -e "s/%TOPIC%/$topic/g" > "$tmp2"
     ret=$?
     if [ "$ret" -ne 0 ] ; then
         echo $filename
@@ -43,6 +44,7 @@ while IFS=";" read cut_start cut_end video_in filename start end day speakers to
 #    inkscape -z --export-background-opacity=0 --export-height=1080 --export-type=pdf --export-filename="./output/$filename.pdf" "$tmp"
     inkscape -z --export-png="./output/$filename.png" "$tmp" &> /dev/null
     inkscape -z --export-png="./output2/$filename.png" "$tmp2" &> /dev/null
+    inkscape -z --export-filename="./output3/prestavka-$filename.pdf" --export-type=pdf --export-overwrite "$tmp2" &> /dev/null
 #    inkscape -z --export-background-opacity=0 --export-height=1080 --export-type=png --export-filename="./output/$filename.png" "$tmp" &> /dev/null
 #    inkscape -z --export-background-opacity=0 --export-height=1080 --export-type=png --export-filename="./output2/$filename.png" "$tmp2" &> /dev/null
     ret=$?

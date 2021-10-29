@@ -26,6 +26,11 @@ function time_to_seconds()
 while IFS=";" read cut_start cut_end video_in filename start end day speakers topic; do
     echo "cut_start=$cut_start cut_end=$cut_end video_in=$video_in filename=$filename start=$start end=$end day=$day speakers=$speakers topic=$topic"
 
+    if [ ! -d "$video_in" ]; then
+        echo "Error: video_in for \"$filename\" doesn't exists" >&2;
+        continue;
+    fi
+
 
     if ! cut_start_s=$(time_to_seconds "$cut_start"); then
         echo "skipping $filename" >&2
