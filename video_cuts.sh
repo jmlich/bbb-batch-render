@@ -2,6 +2,12 @@
 
 #set -x
 
+rm -rf ./tmp
+#rm -rf ./video_out
+
+mkdir -p ./video_out
+mkdir -p ./tmp
+
 DIR=$(pwd)
 
 #
@@ -48,8 +54,9 @@ while IFS=";" read cut_start cut_end video_in filename start end day speakers to
 
     ./prep_title.sh "$filename"
 
-    ./bbb-render/make-xges.py --start $cut_start_s --end $cut_end_s --backdrop "./output/$filename.png"  "$video_in" "$DIR/tmp/$filename.xges" --prepend-file "$DIR/output2/$filename.png" "$DIR/1.png" --append-file "$DIR/2.png" "$DIR/3.png" "$DIR/4.png"
-    rm -f "$DIR/video_out/$filename.mp4"
+    ./bbb-render/make-xges.py --start $cut_start_s --end $cut_end_s --backdrop "./output/$filename.png" --opening-credits "$DIR/output2/$filename.png" --opening-credits "$DIR/1.png" --closing-credits "$DIR/2.png" --closing-credits  "$DIR/3.png" --annotations -- "$video_in" "$DIR/tmp/$filename.xges" 
+
+#    rm -f "$DIR/video_out/$filename.mp4"
     ges-launch-1.0 --load "$DIR/tmp/$filename.xges" -o "$DIR/video_out/$filename.mp4"
 
 
