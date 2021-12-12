@@ -29,8 +29,14 @@ function time_to_seconds()
 }
 
 
-while IFS=";" read cut_start cut_end video_in filename start end day speakers topic; do
-    echo "cut_start=$cut_start cut_end=$cut_end video_in=$video_in filename=$filename start=$start end=$end day=$day speakers=$speakers topic=$topic"
+while IFS=";" read cut_start cut_end video_in filename start end day speakers topic webcam_size _; do
+    echo "cut_start=$cut_start cut_end=$cut_end video_in=$video_in filename=$filename start=$start end=$end day=$day speakers=$speakers topic=$topic webcam_size=$webcam_size"
+
+    if [ -n "$webcam_size" ]; then
+        cam_param="--webcam-size $webcam_size"
+    else
+        cam_param=""
+    fi
 
     if [ ! -d "$video_in" ]; then
         echo "Error: video_in for \"$filename\" doesn't exists" >&2;
@@ -52,9 +58,11 @@ while IFS=";" read cut_start cut_end video_in filename start end day speakers to
         continue;
     fi
 
+
+
     ./prep_title.sh "$filename"
 
-    ./bbb-render/make-xges.py --start $cut_start_s --end $cut_end_s --backdrop "./output/$filename.png" --opening-credits "$DIR/output2/$filename.png" --opening-credits "$DIR/1.png" --closing-credits "$DIR/2.png" --closing-credits  "$DIR/3.png" --annotations -- "$video_in" "$DIR/tmp/$filename.xges" 
+    ./bbb-render/make-xges.py --start $cut_start_s --end $cut_end_s $cam_param --backdrop "./output/$filename.png" --opening-credits "$DIR/output2/$filename.png" --opening-credits "$DIR/1.png" --closing-credits "$DIR/2.png" --closing-credits  "$DIR/3.png" --annotations -- "$video_in" "$DIR/tmp/$filename.xges" 
 
 #    rm -f "$DIR/video_out/$filename.mp4"
     ges-launch-1.0 --load "$DIR/tmp/$filename.xges" -o "$DIR/video_out/$filename.mp4"
