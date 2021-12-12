@@ -14,7 +14,7 @@ mkdir -p output
 mkdir -p output2
 mkdir -p output3
 
-while IFS=";" read cut_start cut_end video_in filename start end day speakers topic; do
+while IFS=";" read cut_start cut_end video_in filename start end day speakers topic webcam_size _; do
 #    echo "cut_start=$cut_start cut_end=$cut_end video_in=$video_in filename=$filename start=$start end=$end day=$day speakers=$speakers topic=$topic"
 
     echo $filename
